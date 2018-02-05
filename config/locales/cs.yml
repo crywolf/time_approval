@@ -1,0 +1,11 @@
+cs:
+  label_approvable_time_entries: Schvalování času
+  label_approvable_entry_plural: Schvalování vykázaného času
+
+  field_approved: Schváleno
+
+  permission_approvable_time_entries: Schvalování vykázaného času
+
+  button_approve: Schválit vybrané
+
+  notice_successful_approve: Úspěšně schváleno.

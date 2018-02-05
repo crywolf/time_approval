@@ -1,0 +1,12 @@
+# English strings go here for Rails i18n
+en:
+  label_approvable_time_entries: Time log approval
+  label_approvable_entry_plural: Spent time log approval
+
+  field_approved: Approved
+
+  permission_approvable_time_entries: Time log approval
+
+  button_approve: Approve selected
+
+  notice_successful_approve: Succesfully approved.

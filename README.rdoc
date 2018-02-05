@@ -1,0 +1,13 @@
+= time_approval
+
+Redmine Time approval plugin. This plugin allows managers to approve time spent by developers.
+
+1/ Put the source code into the plugins directory
+
+2/ Migrate plugin:
+
+  $ bundle exec rake redmine:plugins:migrate
+
+3/ Restart Redmine
+
+4/ Check the permissions on the Roles and permissions(Administration)
