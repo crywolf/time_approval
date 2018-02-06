@@ -36,7 +36,7 @@ class ApprovableTimeEntriesController < ApplicationController
         @entry_count = scope.count
         @entry_pages = Paginator.new @entry_count, per_page_option, params['page']
         @entries = scope.offset(@entry_pages.offset).limit(@entry_pages.per_page).to_a
-        @total_hours = scope.sum(:hours).to_f
+        @entries.reject! {|t| !t.editable_by?(User.current)}
 
         render :layout => !request.xhr?
       }
@@ -58,11 +58,6 @@ class ApprovableTimeEntriesController < ApplicationController
   end
 
   def bulk_approve
-logger.error '----------'
-logger.error params[:ids]
-logger.error @time_entries
-logger.error '********'
-
     unsaved_time_entry_ids = []
     @time_entries.each do |time_entry|
       time_entry.reload

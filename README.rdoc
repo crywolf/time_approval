@@ -10,4 +10,4 @@ Redmine Time approval plugin. This plugin allows managers to approve time spent 
 
 3/ Restart Redmine
 
-4/ Check the permissions on the Roles and permissions(Administration)
+4/ Check the permissions on the Roles and permissions (Administration)
