@@ -1,3 +1,5 @@
+require 'timelog_controller_patch'
+
 Redmine::Plugin.register :time_approval do
   name 'Time Approval plugin'
   author 'Vojtěch Toman'
