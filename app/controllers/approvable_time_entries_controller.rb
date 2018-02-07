@@ -20,8 +20,9 @@ class ApprovableTimeEntriesController < ApplicationController
   def index
     return deny_access unless @project
 
-    params[:f] = ['spent_on'] unless params[:f]
-    params[:op] = { spent_on: 'lw' } unless params[:op]
+    params[:f] = ['spent_on', 'approved'] unless params[:f]
+    params[:op] = { spent_on: 'lw', approved: '=' } unless params[:op]
+    params[:v] = { approved: ['false'] } unless params[:v]
 
     @query = ApprovableTimeEntryQuery.build_from_params(params, :project => @project, :name => '_')
 
