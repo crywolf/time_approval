@@ -18,8 +18,6 @@ class ApprovableTimeEntriesController < ApplicationController
   include QueriesHelper
 
   def index
-    return deny_access unless @project
-
     params[:f] = ['spent_on', 'approved'] unless params[:f]
     params[:op] = { spent_on: 'lw', approved: '=' } unless params[:op]
     params[:v] = { approved: ['false'] } unless params[:v]
@@ -34,7 +32,9 @@ class ApprovableTimeEntriesController < ApplicationController
 
     respond_to do |format|
       format.html {
-        @entry_count = scope.count
+#        @entry_count = scope.count
+        @entry_count = scope.to_a.reject{|t| !t.editable_by?(User.current)}.count
+
         @entry_pages = Paginator.new @entry_count, per_page_option, params['page']
         @entries = scope.offset(@entry_pages.offset).limit(@entry_pages.per_page).to_a
         @entries.reject! {|t| !t.editable_by?(User.current)}
