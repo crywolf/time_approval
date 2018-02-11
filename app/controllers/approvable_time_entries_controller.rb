@@ -32,12 +32,11 @@ class ApprovableTimeEntriesController < ApplicationController
 
     respond_to do |format|
       format.html {
-#        @entry_count = scope.count
-        @entry_count = scope.to_a.reject{|t| !t.editable_by?(User.current)}.count
+        @entry_count = scope.to_a.reject{|t| !User.current.membership(t.project) && !t.editable_by?(User.current)}.count
 
         @entry_pages = Paginator.new @entry_count, per_page_option, params['page']
         @entries = scope.offset(@entry_pages.offset).limit(@entry_pages.per_page).to_a
-        @entries.reject! {|t| !t.editable_by?(User.current)}
+        @entries.reject! {|t| !User.current.membership(t.project) && !t.editable_by?(User.current)}
 
         render :layout => !request.xhr?
       }
@@ -95,13 +94,24 @@ private
     end
   end
 
+  def find_optional_project
+    if params[:issue_id].present?
+      @issue = Issue.find(params[:issue_id])
+      @project = @issue.project
+    elsif params[:project_id].present?
+      @project = Project.find(params[:project_id])
+    end
+  rescue ActiveRecord::RecordNotFound
+    render_404
+  end
+
   def find_time_entries
     @time_entries = TimeEntry.where(:id => params[:id] || params[:ids]).
       preload(:project => :time_entry_activities).
       preload(:user).to_a
 
     raise ActiveRecord::RecordNotFound if @time_entries.empty?
-    raise Unauthorized unless @time_entries.all? {|t| t.editable_by?(User.current)}
+    raise Unauthorized unless @time_entries.all? {|t| User.current.membership(t.project) || t.editable_by?(User.current)}
     @projects = @time_entries.collect(&:project).compact.uniq
     @project = @projects.first if @projects.size == 1
   rescue ActiveRecord::RecordNotFound
