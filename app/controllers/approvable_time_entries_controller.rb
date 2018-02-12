@@ -32,11 +32,11 @@ class ApprovableTimeEntriesController < ApplicationController
 
     respond_to do |format|
       format.html {
-        @entry_count = scope.to_a.reject{|t| !User.current.membership(t.project) && !t.editable_by?(User.current)}.count
+        @entry_count = scope.to_a.reject {|t| !approvable_by_current_user(t)}.count
 
         @entry_pages = Paginator.new @entry_count, per_page_option, params['page']
         @entries = scope.offset(@entry_pages.offset).limit(@entry_pages.per_page).to_a
-        @entries.reject! {|t| !User.current.membership(t.project) && !t.editable_by?(User.current)}
+        @entries.reject! {|t| !approvable_by_current_user(t)}
 
         render :layout => !request.xhr?
       }
@@ -74,6 +74,13 @@ class ApprovableTimeEntriesController < ApplicationController
 
 
 private
+
+  def approvable_by_current_user(time_entry)
+    User.current.admin? ||
+    User.current.membership(time_entry.project) &&
+    time_entry.user != User.current
+  end
+
   # Returns the TimeEntry scope for index and report actions
   def time_entry_scope(options={})
     scope = @query.results_scope(options)
@@ -111,11 +118,10 @@ private
       preload(:user).to_a
 
     raise ActiveRecord::RecordNotFound if @time_entries.empty?
-    raise Unauthorized unless @time_entries.all? {|t| User.current.membership(t.project) || t.editable_by?(User.current)}
+    raise Unauthorized unless @time_entries.all? {|t| approvable_by_current_user(t)}
     @projects = @time_entries.collect(&:project).compact.uniq
     @project = @projects.first if @projects.size == 1
   rescue ActiveRecord::RecordNotFound
-    #render_404
     redirect_back_or_default :index
   end
 
