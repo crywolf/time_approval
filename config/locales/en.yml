@@ -4,6 +4,8 @@ en:
   label_approvable_entry_plural: Spent time log approval
 
   field_approved: Approved
+  field_approved_by: Approved by
+  field_approved_by_user: Approved by
 
   permission_approvable_time_entries: Time log approval
 

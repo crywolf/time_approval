@@ -3,6 +3,8 @@ cs:
   label_approvable_entry_plural: Schvalování vykázaného času
 
   field_approved: Schváleno
+  field_approved_by: Schválil
+  field_approved_by_user: Schválil
 
   permission_approvable_time_entries: Schvalování vykázaného času
 

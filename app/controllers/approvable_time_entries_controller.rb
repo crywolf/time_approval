@@ -18,9 +18,7 @@ class ApprovableTimeEntriesController < ApplicationController
   include QueriesHelper
 
   def index
-    params[:f] = ['spent_on', 'approved'] unless params[:f]
-    params[:op] = { spent_on: 'lw', approved: '=' } unless params[:op]
-    params[:v] = { approved: ['false'] } unless params[:v]
+    set_params_for_default_filters
 
     @query = ApprovableTimeEntryQuery.build_from_params(params, :project => @project, :name => '_')
 
@@ -46,7 +44,7 @@ class ApprovableTimeEntriesController < ApplicationController
         @entries = scope.offset(@offset).limit(@limit).preload(:custom_values => :custom_field).to_a
       }
       format.atom {
-        entries = scope.limit(Setting.feeds_limit.to_i).reorder("#{TimeEntry.table_name}.created_on DESC").to_a
+        entries = scope.limit(Setting.feeds_limit.to_i).reorder("#{ApprovableTimeEntry.table_name}.created_on DESC").to_a
         render_feed(entries, :title => l(:label_spent_time))
       }
       format.csv {
@@ -61,7 +59,9 @@ class ApprovableTimeEntriesController < ApplicationController
     unsaved_time_entry_ids = []
     @time_entries.each do |time_entry|
       time_entry.reload
+      next if time_entry.approved 
       time_entry.approved = true
+      time_entry.approved_by = User.current
       unless time_entry.save
         logger.info "time entry could not be approved: #{time_entry.errors.full_messages}" if logger && logger.info?
         # Keep unsaved time_entry ids to display them in flash error
@@ -74,6 +74,11 @@ class ApprovableTimeEntriesController < ApplicationController
 
 
 private
+  def set_params_for_default_filters
+    params[:f] = ['spent_on', 'approved'] unless params[:f]
+    params[:op] = { spent_on: 'lw', approved: '=' } unless params[:op]
+    params[:v] = { approved: ['false'] } unless params[:v]
+  end
 
   def approvable_by_current_user(time_entry)
     User.current.admin? ||
@@ -113,7 +118,7 @@ private
   end
 
   def find_time_entries
-    @time_entries = TimeEntry.where(:id => params[:id] || params[:ids]).
+    @time_entries = ApprovableTimeEntry.where(:id => params[:id] || params[:ids]).
       preload(:project => :time_entry_activities).
       preload(:user).to_a
 

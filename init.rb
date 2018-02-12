@@ -1,5 +1,6 @@
 require 'timelog_controller_patch'
 require 'time_entry_query_patch'
+require 'time_entry_patch'
 
 Redmine::Plugin.register :time_approval do
   name 'Time Approval plugin'
