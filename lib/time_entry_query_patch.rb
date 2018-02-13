@@ -4,6 +4,10 @@ module TimeEntryQueryPatch
 
     base.class_eval do
       alias_method_chain :initialize_available_filters, :field_approved
+
+      # preload descendant
+      require File.expand_path(File.join(File.dirname(__FILE__), '../app/models/approvable_time_entry_query.rb'))
+      Module.const_get('ApprovableTimeEntryQuery')
     end
   end
 

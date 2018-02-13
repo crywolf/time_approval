@@ -44,7 +44,7 @@ class ApprovableTimeEntriesController < ApplicationController
         @entries = scope.offset(@offset).limit(@limit).preload(:custom_values => :custom_field).to_a
       }
       format.atom {
-        entries = scope.limit(Setting.feeds_limit.to_i).reorder("#{ApprovableTimeEntry.table_name}.created_on DESC").to_a
+        entries = scope.limit(Setting.feeds_limit.to_i).reorder("#{TimeEntry.table_name}.created_on DESC").to_a
         render_feed(entries, :title => l(:label_spent_time))
       }
       format.csv {
@@ -118,7 +118,7 @@ private
   end
 
   def find_time_entries
-    @time_entries = ApprovableTimeEntry.where(:id => params[:id] || params[:ids]).
+    @time_entries = TimeEntry.where(:id => params[:id] || params[:ids]).
       preload(:project => :time_entry_activities).
       preload(:user).to_a
 

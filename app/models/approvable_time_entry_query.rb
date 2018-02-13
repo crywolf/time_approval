@@ -1,23 +1,10 @@
 class ApprovableTimeEntryQuery < TimeEntryQuery
 
-  self.queried_class = ApprovableTimeEntry
-
   self.available_columns << QueryColumn.new(:approved, sortable: "#{self.queried_class.table_name}.approved")
   self.available_columns << QueryColumn.new(:approved_by)
 
   def default_columns_names
     @default_columns_names ||= super.push(:approved, :approved_by)
-  end
-
-  def results_scope(options={})
-    order_option = [group_by_sort_order, options[:order]].flatten.reject(&:blank?)
-
-    self.queried_class.visible.
-      where(statement).
-      order(order_option).
-      joins(joins_for_order_statement(order_option.join(','))).
-      includes(:activity).
-      references(:activity)
   end
 
   def initialize_available_filters
