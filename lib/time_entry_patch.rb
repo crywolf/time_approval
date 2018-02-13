@@ -1,11 +1,14 @@
 module TimeEntryPatch
   def self.included(base) # :nodoc:
-    base.send(:include, InstanceMethods)
-  end
+    base.class_eval do
+      belongs_to :approved_by, class_name: 'User', foreign_key: 'approved_by_user_id'
 
-  module InstanceMethods
-    def approved_by
-      User.where(id: self.approved_by_user_id).first
+      # preload descendant
+      require File.join(Rails.root, 'plugins/time_approval/app/models/approvable_time_entry.rb')
+      Module.const_get('ApprovableTimeEntry')
+
+      require File.join(Rails.root, 'plugins/time_approval/app/models/approvable_time_entry_query.rb')
+      Module.const_get('ApprovableTimeEntryQuery')
     end
   end
 end

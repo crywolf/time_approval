@@ -5,7 +5,6 @@ module TimeEntryQueryPatch
     base.class_eval do
       alias_method_chain :initialize_available_filters, :field_approved
     end
-
   end
 
   module InstanceMethods
