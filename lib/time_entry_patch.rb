@@ -4,10 +4,10 @@ module TimeEntryPatch
       belongs_to :approved_by, class_name: 'User', foreign_key: 'approved_by_user_id'
 
       # preload descendant
-      require File.join(Rails.root, 'plugins/time_approval/app/models/approvable_time_entry.rb')
+      require File.join(File.dirname(__FILE__), '../app/models/approvable_time_entry.rb')
       Module.const_get('ApprovableTimeEntry')
 
-      require File.join(Rails.root, 'plugins/time_approval/app/models/approvable_time_entry_query.rb')
+      require File.join(File.dirname(__FILE__), '../app/models/approvable_time_entry_query.rb')
       Module.const_get('ApprovableTimeEntryQuery')
     end
   end
