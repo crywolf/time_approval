@@ -13,5 +13,5 @@ Redmine::Plugin.register :time_approval do
   menu :application_menu, :approvable_time_entries, { controller: 'approvable_time_entries', action: 'index' }, if: (Proc.new { User.current.allowed_to?(:approvable_time_entries, nil, global: true) })
   menu :project_menu, :approvable_time_entries, { controller: 'approvable_time_entries', action: 'index' }, after: :activity, param: :project_id
 
-  settings default: { 'spent_on_filter_value' => 'lw' }, partial: 'settings/time_approval_settings'
+  settings default: { 'spent_on_filter_value' => 'lw', 'approve_own_time_entries' => 'true' }, partial: 'settings/time_approval_settings'
 end

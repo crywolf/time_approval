@@ -1,13 +1,16 @@
-<p>
-  <%= content_tag(:label, l(:settings_spent_on_filter_value_label)) %>
-
 <%
+  labels = TimeEntryQuery.operators_labels
   collection = {}
-
   ["t", "ld", "w", "lw", "l2w", "m", "lm", "y"].each do |cond|
-    collection[Query.operators_labels[cond]] = cond
+    collection[labels[cond]] = cond
   end
 %>
-
+<p>
+  <%= content_tag(:label, l(:settings_spent_on_filter_value_label)) %>
   <%= select_tag 'settings[spent_on_filter_value]', options_for_select(collection, settings['spent_on_filter_value']) %>
+</p>
+
+<p>
+  <%= content_tag(:label, l(:settings_approve_own_time_entries)) %>
+  <%= check_box_tag 'settings[approve_own_time_entries]', true, settings['approve_own_time_entries'] %>
 </p>

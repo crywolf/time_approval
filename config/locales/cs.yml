@@ -13,3 +13,4 @@ cs:
   notice_successful_approve: Úspěšně schváleno.
 
   settings_spent_on_filter_value_label: Výchozí hodnota filtru Datum
+  settings_approve_own_time_entries: Uživatel může schvalovat čas sám sobě
