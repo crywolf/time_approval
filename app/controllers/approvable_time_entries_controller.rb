@@ -62,6 +62,7 @@ class ApprovableTimeEntriesController < ApplicationController
       next if time_entry.approved 
       time_entry.approved = true
       time_entry.approved_by = User.current
+      time_entry.approved_at = DateTime.now
       unless time_entry.save
         logger.info "time entry could not be approved: #{time_entry.errors.full_messages}" if logger && logger.info?
         # Keep unsaved time_entry ids to display them in flash error
