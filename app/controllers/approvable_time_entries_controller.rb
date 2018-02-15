@@ -76,7 +76,10 @@ class ApprovableTimeEntriesController < ApplicationController
 private
   def set_params_for_default_filters
     params[:f] = ['spent_on', 'approved'] unless params[:f]
-    params[:op] = { spent_on: 'lw', approved: '=' } unless params[:op]
+
+    spent_on_setting = Setting.plugin_time_approval['spent_on_filter_value']
+    params[:op] = { spent_on: spent_on_setting, approved: '=' } unless params[:op]
+
     params[:v] = { approved: ['false'] } unless params[:v]
   end
 

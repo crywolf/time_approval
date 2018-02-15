@@ -12,3 +12,5 @@ en:
   button_approve: Approve selected
 
   notice_successful_approve: Succesfully approved.
+
+  settings_spent_on_filter_value_label: Default value for Date filter

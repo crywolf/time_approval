@@ -1,0 +1,13 @@
+<p>
+  <%= content_tag(:label, l(:settings_spent_on_filter_value_label)) %>
+
+<%
+  collection = {}
+
+  ["t", "ld", "w", "lw", "l2w", "m", "lm", "y"].each do |cond|
+    collection[Query.operators_labels[cond]] = cond
+  end
+%>
+
+  <%= select_tag 'settings[spent_on_filter_value]', options_for_select(collection, settings['spent_on_filter_value']) %>
+</p>
