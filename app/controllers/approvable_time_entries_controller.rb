@@ -85,12 +85,14 @@ private
   end
 
   def approvable_by_current_user(time_entry)
-    is_admin_or_project_member = User.current.admin? || User.current.membership(time_entry.project)
+    return true if User.current.admin?
+
+    is_project_member = User.current.membership(time_entry.project)
 
     if (Setting.plugin_time_approval['approve_own_time_entries'])
-      is_admin_or_project_member
+      is_project_member
     else
-      is_admin_or_project_member && time_entry.user != User.current
+      is_project_member && time_entry.user != User.current
     end
   end
 
