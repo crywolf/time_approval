@@ -9,8 +9,10 @@ cs:
   permission_approvable_time_entries: Schvalování vykázaného času
 
   button_approve: Schválit vybrané
+  button_reject: Zamítnout vybrané
 
   notice_successful_approve: Úspěšně schváleno.
+  notice_successful_reject: Úspěšně zamítnuto.
 
   settings_spent_on_filter_value_label: Výchozí hodnota filtru Datum
   settings_approve_own_time_entries: Uživatel může schvalovat čas sám sobě

@@ -22,7 +22,7 @@
     <%= content_tag('td', column_content(column, entry), :class => column.css_classes) %>
     <% end %>
     <td class="buttons">
-    <% if entry.editable_by?(User.current) && !entry.approved? -%>
+    <% if entry.editable_by?(User.current) && entry.approved == nil -%>
         <%= link_to l(:button_edit), edit_time_entry_path(entry),
                     :title => l(:button_edit),
                     :class => 'icon-only icon-edit' %>

@@ -10,8 +10,10 @@ en:
   permission_approvable_time_entries: Time log approval
 
   button_approve: Approve selected
+  button_reject: Reject selected
 
   notice_successful_approve: Succesfully approved.
+  notice_successful_reject: Succesfully rejected.
 
   settings_spent_on_filter_value_label: Default value for Date filter
   settings_approve_own_time_entries: User can approve his/her own spent time

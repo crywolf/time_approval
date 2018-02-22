@@ -59,20 +59,33 @@ class ApprovableTimeEntriesController < ApplicationController
   end
 
   def bulk_approve
+    if params[:reject]
+      message_sym = :notice_successful_reject
+    else
+      message_sym = :notice_successful_approve
+    end
+
     unsaved_time_entry_ids = []
     @time_entries.each do |time_entry|
       time_entry.reload
-      next if time_entry.approved 
-      time_entry.approved = true
+
+      if params[:reject]
+        next if time_entry.approved != nil
+        time_entry.approved = false
+      else
+        next if time_entry.approved
+        time_entry.approved = true
+      end
+
       time_entry.approved_by = User.current
       time_entry.approved_at = DateTime.now
       unless time_entry.save
-        logger.info "time entry could not be approved: #{time_entry.errors.full_messages}" if logger && logger.info?
+        logger.info "time entry could not be saved: #{time_entry.errors.full_messages}" if logger && logger.info?
         # Keep unsaved time_entry ids to display them in flash error
         unsaved_time_entry_ids << time_entry.id
       end
     end
-    set_flash_from_bulk_time_entry_approved(@time_entries, unsaved_time_entry_ids)
+    set_flash_from_bulk_time_entry_action(message_sym, @time_entries, unsaved_time_entry_ids)
     redirect_back_or_default :index
   end
 
@@ -82,9 +95,7 @@ private
     params[:f] = ['spent_on', 'approved'] unless params[:f]
 
     spent_on_setting = Setting.plugin_time_approval['spent_on_filter_value']
-    params[:op] = { spent_on: spent_on_setting, approved: '=' } unless params[:op]
-
-    params[:v] = { approved: ['false'] } unless params[:v]
+    params[:op] = { spent_on: spent_on_setting, approved: '!*' } unless params[:op]
   end
 
   def can_user_approve_own_entries?
@@ -112,9 +123,9 @@ private
     scope
   end
 
-  def set_flash_from_bulk_time_entry_approved(time_entries, unsaved_time_entry_ids)
+  def set_flash_from_bulk_time_entry_action(message_sym, time_entries, unsaved_time_entry_ids)
     if unsaved_time_entry_ids.empty?
-      flash[:notice] = l(:notice_successful_approve) unless time_entries.empty?
+      flash[:notice] = l(message_sym) unless time_entries.empty?
     else
       flash[:error] = l(:notice_failed_to_save_time_entries,
                         :count => unsaved_time_entry_ids.size,

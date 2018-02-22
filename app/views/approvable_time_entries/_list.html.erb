@@ -27,7 +27,11 @@
   </tbody>
   </table>
 
-  <p><%= submit_tag l(:button_approve), :class => 'button-small', :name => 'submit' %></p>
+  <p>
+    <%= submit_tag l(:button_approve), :class => 'button-small', :name => 'approve' %>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <%= submit_tag l(:button_reject), :class => 'button-small', :name => 'reject' %>
+  </p>
 
 </div>
 <% end -%>
