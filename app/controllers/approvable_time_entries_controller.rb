@@ -28,13 +28,16 @@ class ApprovableTimeEntriesController < ApplicationController
       includes(:project, :user, :issue).
       preload(:issue => [:project, :tracker, :status, :assigned_to, :priority])
 
+    if !can_user_approve_own_entries?
+      scope = scope.where.not(user: User.current)
+    end
+
     respond_to do |format|
       format.html {
-        @entry_count = scope.to_a.reject {|t| !approvable_by_current_user(t)}.count
-
+        @entry_count = scope.count
         @entry_pages = Paginator.new @entry_count, per_page_option, params['page']
         @entries = scope.offset(@entry_pages.offset).limit(@entry_pages.per_page).to_a
-        @entries.reject! {|t| !approvable_by_current_user(t)}
+        @total_hours = scope.sum(:hours).to_f
 
         render :layout => !request.xhr?
       }
@@ -84,12 +87,16 @@ private
     params[:v] = { approved: ['false'] } unless params[:v]
   end
 
-  def approvable_by_current_user(time_entry)
+  def can_user_approve_own_entries?
+    User.current.admin? || Setting.plugin_time_approval['approve_own_time_entries']
+  end
+
+  def approvable_by_current_user?(time_entry)
     return true if User.current.admin?
 
     is_project_member = User.current.membership(time_entry.project)
 
-    if (Setting.plugin_time_approval['approve_own_time_entries'])
+    if Setting.plugin_time_approval['approve_own_time_entries']
       is_project_member
     else
       is_project_member && time_entry.user != User.current
@@ -133,7 +140,7 @@ private
       preload(:user).to_a
 
     raise ActiveRecord::RecordNotFound if @time_entries.empty?
-    raise Unauthorized unless @time_entries.all? {|t| approvable_by_current_user(t)}
+    raise Unauthorized unless @time_entries.all? {|t| approvable_by_current_user?(t)}
     @projects = @time_entries.collect(&:project).compact.uniq
     @project = @projects.first if @projects.size == 1
   rescue ActiveRecord::RecordNotFound
