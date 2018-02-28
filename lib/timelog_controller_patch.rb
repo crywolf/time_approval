@@ -5,6 +5,7 @@ module TimelogControllerPatch
     base.class_eval do
       alias_method_chain :index, :approved_param
       alias_method_chain :edit, :check_if_approved
+      alias_method_chain :bulk_edit, :check_if_approved
       alias_method_chain :update, :check_if_approved
       alias_method_chain :bulk_update, :check_if_approved
     end
@@ -17,17 +18,22 @@ module TimelogControllerPatch
     end
 
     def edit_with_check_if_approved
-      raise Unauthorized if @time_entry.approved != nil
+      raise Unauthorized if @time_entry.approved?
       edit_without_check_if_approved
     end
 
+    def bulk_edit_with_check_if_approved
+      raise Unauthorized if @time_entries.any? {|t| t.approved?}
+      bulk_edit_without_check_if_approved
+    end
+
     def update_with_check_if_approved
-      raise Unauthorized if @time_entry.approved != nil
+      raise Unauthorized if @time_entry.approved?
       update_without_check_if_approved
     end
 
     def bulk_update_with_check_if_approved
-      raise Unauthorized if @time_entries.any? {|t| t.approved != nil}
+      raise Unauthorized if @time_entries.any? {|t| t.approved?}
       bulk_update_without_check_if_approved
     end
   end

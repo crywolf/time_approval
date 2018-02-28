@@ -73,7 +73,7 @@ class ApprovableTimeEntriesController < ApplicationController
         next if time_entry.approved != nil
         time_entry.approved = false
       else
-        next if time_entry.approved
+        next if time_entry.approved?
         time_entry.approved = true
       end
 
