@@ -24,3 +24,13 @@
   <%= link_to l(:button_clear), {:project_id => @project, :issue_id => @issue}, :class => 'icon icon-reload'  %>
 </p>
 </div>
+
+<div class="tabs hide-when-print">
+<% query_params = params.slice(:f, :op, :v, :sort) %>
+<ul>
+    <li><%= link_to(l(:label_details), _approvable_time_entries_path(@project, @issue, query_params),
+                                       :class => (action_name == 'index' ? 'selected' : nil)) %></li>
+    <li><%= link_to(l(:label_report), _report_approvable_time_entries_path(@project, @issue, query_params),
+                                       :class => (action_name == 'report' ? 'selected' : nil)) %></li>
+</ul>
+</div>

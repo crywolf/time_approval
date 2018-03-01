@@ -1,6 +1,6 @@
-<h2><%= l(:label_approvable_entry_plural) %></h2>
+<%= render_timelog_breadcrumb %>
 
-<%#= render_timelog_breadcrumb %>
+<h2><%= l(:label_approvable_entry_plural) %></h2>
 
 <%= form_tag({}, :method => :get, :id => 'query_form') do %>
 <%= hidden_field_tag 'project_id', params[:project_id] %>

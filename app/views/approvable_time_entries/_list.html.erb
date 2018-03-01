@@ -1,6 +1,9 @@
-<%= form_tag({}, method: :patch) do -%>
-<%= hidden_field_tag 'back_url', url_for(params) %>
-<%= hidden_field_tag 'project_id', params[:project_id] %>
+<%= form_tag({action: :bulk_approve}, method: :patch) do -%>
+<%
+  url_params = params.dup
+  url_params.delete(:project_id) unless url_params[:project].present?
+%>
+<%= hidden_field_tag 'back_url', url_for(url_params) %>
 <div class="autoscroll">
 
 <table class="list time-entries">

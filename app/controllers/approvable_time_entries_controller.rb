@@ -3,8 +3,8 @@ class ApprovableTimeEntriesController < ApplicationController
   before_filter :find_time_entries, :only => [:bulk_approve]
   before_filter :authorize, :only => [:bulk_approve]
 
-  before_filter :find_optional_project, :only => [:index]
-  before_filter :authorize_global, :only => [:index]
+  before_filter :find_optional_project, :only => [:index, :report]
+  before_filter :authorize_global, :only => [:index, :report]
 
   rescue_from Query::StatementInvalid, :with => :query_statement_invalid
 
@@ -12,10 +12,13 @@ class ApprovableTimeEntriesController < ApplicationController
   include SortHelper
   helper :issues
   include TimelogHelper
+  helper :timelog
+  helper :time_approval_reports
   helper :custom_fields
   include CustomFieldsHelper
   helper :queries
   include QueriesHelper
+  helper :routes
 
   def index
     set_params_for_default_filters
@@ -58,6 +61,18 @@ class ApprovableTimeEntriesController < ApplicationController
     end
   end
 
+  def report
+    @query = ApprovableTimeEntryQuery.build_from_params(params, :project => @project, :name => '_')
+    scope = time_entry_scope
+
+    @report = TimeApproval::Helpers::TimeReport.new(@project, @issue, params[:criteria], params[:columns], scope)
+
+    respond_to do |format|
+      format.html { render :layout => !request.xhr? }
+      format.csv  { send_data(report_to_csv(@report), :type => 'text/csv; header=present', :filename => 'timelog.csv') }
+    end
+  end
+
   def bulk_approve
     if params[:reject]
       message_sym = :notice_successful_reject
@@ -86,7 +101,7 @@ class ApprovableTimeEntriesController < ApplicationController
       end
     end
     set_flash_from_bulk_time_entry_action(message_sym, @time_entries, unsaved_time_entry_ids)
-    redirect_back_or_default :index
+    redirect_back_or_default approvable_time_entries_path
   end
 
 
@@ -155,7 +170,7 @@ private
     @projects = @time_entries.collect(&:project).compact.uniq
     @project = @projects.first if @projects.size == 1
   rescue ActiveRecord::RecordNotFound
-    redirect_back_or_default :index
+    redirect_back_or_default approvable_time_entries_path
   end
 
 end
