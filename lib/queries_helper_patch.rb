@@ -10,7 +10,7 @@ module QueriesHelperPatch
   module InstanceMethods
     def column_content_with_approved_at(column, issue)
       if column.name == :approved && issue.approved_at
-        column_content_without_approved_at(column, issue)  << ' (' << I18n::l(issue.approved_at, format: "%e.%_m.%Y") << ')'
+        column_content_without_approved_at(column, issue)  << ' (' << format_object(issue.approved_at.to_date) << ')'
       else
         column_content_without_approved_at(column, issue)
       end

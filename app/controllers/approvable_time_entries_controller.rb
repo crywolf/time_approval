@@ -13,7 +13,8 @@ class ApprovableTimeEntriesController < ApplicationController
   helper :issues
   include TimelogHelper
   helper :timelog
-  helper :time_approval_reports
+  include TimeApprovalHelper
+  helper :time_approval
   helper :custom_fields
   include CustomFieldsHelper
   helper :queries
@@ -111,22 +112,6 @@ private
 
     spent_on_setting = Setting.plugin_time_approval['spent_on_filter_value']
     params[:op] = { spent_on: spent_on_setting, approved: '!*' } unless params[:op]
-  end
-
-  def can_user_approve_own_entries?
-    User.current.admin? || Setting.plugin_time_approval['approve_own_time_entries']
-  end
-
-  def approvable_by_current_user?(time_entry)
-    return true if User.current.admin?
-
-    is_project_member = User.current.membership(time_entry.project)
-
-    if Setting.plugin_time_approval['approve_own_time_entries']
-      is_project_member
-    else
-      is_project_member && time_entry.user != User.current
-    end
   end
 
   # Returns the TimeEntry scope for index and report actions

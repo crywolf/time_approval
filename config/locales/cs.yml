@@ -6,6 +6,9 @@ cs:
   field_approved_by: Schválil
   field_approved_by_user: Schválil
 
+  approved: Schváleno
+  rejected: Zamítnuto
+
   permission_approvable_time_entries: Schvalování vykázaného času
 
   button_approve: Schválit vybrané

@@ -21,7 +21,8 @@
   <tbody>
   <% entries.each do |entry| -%>
     <tr class="time-entry <%= cycle("odd", "even") %> hascontextmenu">
-      <td class="checkbox hide-when-print"><%= check_box_tag("ids[]", entry.id, false, :id => nil) %></td>
+      <% disabled = true if !approvable_by_current_user?(entry) || entry.approved? %>
+      <td class="checkbox hide-when-print"><%= check_box_tag("ids[]", entry.id, false, id: nil, disabled: disabled) %></td>
       <% @query.inline_columns.each do |column| %>
       <%= content_tag('td', column_content(column, entry), :class => column.css_classes) %>
       <% end %>

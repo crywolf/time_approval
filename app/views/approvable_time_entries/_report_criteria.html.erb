@@ -15,16 +15,25 @@
 
 <tr>
 <%= ("<td></td>" * level).html_safe %>
-<td class="name" style="color: red">
+<td class="name">
 <% if level == criterias.length - 1 %>
-  <% hours_for_value.each do |te| %>
-    <%= check_box_tag("ids[]", te['id'], false, :id => nil) if te['user_id'] != User.current.id %>
-    id:<%= te['id'] %>|user_id:<%= te['user_id'] %>-
-    <%= format_hour_row(te) %>
-  <% end %>
+  <table class="report-time-entry">
+    <% hours_for_value.each do |te| %>
+      <% time_entry = TimeEntry.find(te['id']) %>
+      <% disabled = true if !approvable_by_current_user?(time_entry) || time_entry.approved? %>
+      <tr class="time-entry <%= cycle("odd", "even") %>">
+        <td><%= check_box_tag("ids[]", te['id'], false, id: nil, disabled: disabled) %></td>
+        <td><%= format_object(te['spent_on']) %></td>
+      <td><%= format_object(te['comments']) %></td>
+      <td><%= format_object(te['hours']) %></td>
+      <td><%= format_approved_field(te) %></td>
+      </tr>
+    <% end %>
+  </table>
 <% end %>
 </td>
 <%= ("<td></td>" * (criterias.length - level - 1)).html_safe -%>
+<td class="hours"></td>
 </tr>
 
 <% if criterias.length > level+1 -%>

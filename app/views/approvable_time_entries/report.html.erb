@@ -84,3 +84,6 @@
 
 <% html_title l(:label_spent_time), l(:label_report) %>
 
+<% content_for :header_tags do %>
+    <%= stylesheet_link_tag 'main', plugin: 'time_approval' %>
+<% end %>

@@ -7,6 +7,9 @@ en:
   field_approved_by: Approved by
   field_approved_by_user: Approved by
 
+  approved: Approved
+  rejected: Rejected
+
   permission_approvable_time_entries: Time log approval
 
   button_approve: Approve selected
