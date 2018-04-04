@@ -1,1 +1,4 @@
-table.report-time-entry td {text-align: left;}
+table.report-time-entry td {
+    text-align: left;
+    white-space: normal;
+}
