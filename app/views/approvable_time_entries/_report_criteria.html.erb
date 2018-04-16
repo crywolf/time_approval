@@ -24,9 +24,10 @@
       <tr class="time-entry <%= cycle("odd", "even") %>">
         <td><%= check_box_tag("ids[]", te['id'], false, id: nil, disabled: disabled) %></td>
         <td><%= format_object(te['spent_on']) %></td>
-      <td><%= format_object(te['comments']) %></td>
-      <td><%= format_object(te['hours']) %></td>
-      <td><%= format_approved_field(te) %></td>
+        <td><%= format_object(te['comments']) %></td>
+        <td><%= format_object(te['hours']) %></td>
+        <td><%= format_approved_field(te) %></td>
+        <td><%= format_approved_comment(te, !disabled) %></td>
       </tr>
     <% end %>
   </table>

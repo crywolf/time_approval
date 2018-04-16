@@ -5,6 +5,7 @@ cs:
   field_approved: Schváleno
   field_approved_by: Schválil
   field_approved_by_user: Schválil
+  field_approved_comment: Komentář managera
 
   approved: Schváleno
   rejected: Zamítnuto

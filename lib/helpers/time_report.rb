@@ -8,7 +8,7 @@ module TimeApproval
         @columns = 'year' # override from init
 
         unless @criteria.empty?
-          time_columns = %w(tyear tmonth tweek spent_on id comments approved approved_at user_id)
+          time_columns = %w(tyear tmonth tweek spent_on id comments approved approved_at user_id approved_comment)
           @hours = []
           @scope.includes(:issue, :activity).
               group(@criteria.collect{|criteria| @available_criteria[criteria][:sql]} + time_columns).

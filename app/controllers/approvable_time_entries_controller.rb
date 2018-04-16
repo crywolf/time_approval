@@ -86,15 +86,15 @@ class ApprovableTimeEntriesController < ApplicationController
       time_entry.reload
 
       if params[:reject]
-        next if time_entry.approved != nil
         time_entry.approved = false
       else
-        next if time_entry.approved?
         time_entry.approved = true
       end
 
       time_entry.approved_by = User.current
       time_entry.approved_at = DateTime.now
+      time_entry.approved_comment = params[:approved_comment][time_entry.id.to_s]
+
       unless time_entry.save
         logger.info "time entry could not be saved: #{time_entry.errors.full_messages}" if logger && logger.info?
         # Keep unsaved time_entry ids to display them in flash error

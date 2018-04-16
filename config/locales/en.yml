@@ -6,6 +6,7 @@ en:
   field_approved: Approved
   field_approved_by: Approved by
   field_approved_by_user: Approved by
+  field_approved_comment: Manager's comment
 
   approved: Approved
   rejected: Rejected

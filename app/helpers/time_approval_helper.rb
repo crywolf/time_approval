@@ -30,4 +30,17 @@ module TimeApprovalHelper
 
     output
   end
+
+  def format_approved_comment(time_entry, editable)
+    id      = time_entry['id']
+    comment = time_entry['approved_comment']
+
+    if editable
+      output = content_tag('input', nil, name: "approved_comment[#{id}]", value: comment, type: 'text')
+    else
+      output = format_object(comment)
+    end
+
+    output
+  end
 end

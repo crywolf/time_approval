@@ -3,9 +3,10 @@ class ApprovableTimeEntryQuery < TimeEntryQuery
   self.available_columns << QueryColumn.new(:approved, sortable: "#{self.queried_class.table_name}.approved")
   self.available_columns << QueryColumn.new(:approved_by)
   self.available_columns << QueryColumn.new(:created_on)
+  self.available_columns << QueryColumn.new(:approved_comment)
 
   def default_columns_names
-    @default_columns_names ||= super.push(:approved, :approved_by, :created_on)
+    @default_columns_names ||= super.push(:approved, :approved_by, :created_on, :approved_comment)
   end
 
   def initialize_available_filters
